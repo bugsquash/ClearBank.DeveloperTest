@@ -6,27 +6,19 @@ namespace ClearBank.DeveloperTest.Services
 	{
 		public MakePaymentResult ValidatRequestWithAccount(MakePaymentRequest request, Account account)
 		{
-			var result = new MakePaymentResult();
+			var result = new MakePaymentResult() { Success = true };
 
 			switch (request.PaymentScheme)
 			{
 				case PaymentScheme.Bacs:
-					if (account == null)
-					{
-						result.Success = false;
-					}
-					else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Bacs))
+					if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Bacs))
 					{
 						result.Success = false;
 					}
 					break;
 
 				case PaymentScheme.FasterPayments:
-					if (account == null)
-					{
-						result.Success = false;
-					}
-					else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.FasterPayments))
+					if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.FasterPayments))
 					{
 						result.Success = false;
 					}
@@ -37,11 +29,7 @@ namespace ClearBank.DeveloperTest.Services
 					break;
 
 				case PaymentScheme.Chaps:
-					if (account == null)
-					{
-						result.Success = false;
-					}
-					else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Chaps))
+					if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Chaps))
 					{
 						result.Success = false;
 					}
