@@ -2,9 +2,9 @@
 
 namespace ClearBank.DeveloperTest.Services
 {
-	public class ValidateAccountService
+	public class RequestService : IRequestService
 	{
-		public MakePaymentResult ValidatAccountWithRequest(Account account, MakePaymentRequest request)
+		public MakePaymentResult ValidatRequestWithAccount(MakePaymentRequest request, Account account)
 		{
 			var result = new MakePaymentResult();
 

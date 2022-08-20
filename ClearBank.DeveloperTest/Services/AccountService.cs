@@ -3,7 +3,7 @@ using ClearBank.DeveloperTest.Types;
 
 namespace ClearBank.DeveloperTest.Services
 {
-	public class AccountService
+	public class AccountService : IAccountService
 	{
 		public Account GetAccount(string accountNumber, string dataStoreType)
 		{

@@ -12,8 +12,8 @@ namespace ClearBank.DeveloperTest.Services
 			var accountService = new AccountService();
 			Account account = accountService.GetAccount(request.DebtorAccountNumber, dataStoreType);
 
-			var validateAccountService = new ValidateAccountService();
-			MakePaymentResult result = validateAccountService.ValidatAccountWithRequest(account, request);
+			var requestService = new RequestService();
+			MakePaymentResult result = requestService.ValidatRequestWithAccount(request, account);
 
 			if (result.Success)
 			{
