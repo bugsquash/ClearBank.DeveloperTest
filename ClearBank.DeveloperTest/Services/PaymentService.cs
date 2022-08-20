@@ -1,5 +1,4 @@
-﻿using ClearBank.DeveloperTest.Data;
-using ClearBank.DeveloperTest.Types;
+﻿using ClearBank.DeveloperTest.Types;
 using System.Configuration;
 
 namespace ClearBank.DeveloperTest.Services
@@ -10,99 +9,21 @@ namespace ClearBank.DeveloperTest.Services
 		{
 			var dataStoreType = ConfigurationManager.AppSettings["DataStoreType"];
 
-			//Account account = null;
+			var accountService = new AccountService();
+			Account account = accountService.GetAccount(request.DebtorAccountNumber, dataStoreType);
 
-			//if (dataStoreType == "Backup")
-			//{
-			//	var accountDataStore = new BackupAccountDataStore();
-			//	account = accountDataStore.GetAccount(request.DebtorAccountNumber);
-			//}
-			//else
-			//{
-			//	var accountDataStore = new AccountDataStore();
-			//	account = accountDataStore.GetAccount(request.DebtorAccountNumber);
-			//}
-
-			AccountService accountService = new AccountService();
-			var account = accountService.GetAccount(request.DebtorAccountNumber, dataStoreType);
-
-			//var result = new MakePaymentResult();
-
-			//switch (request.PaymentScheme)
-			//{
-			//	case PaymentScheme.Bacs:
-			//		if (account == null)
-			//		{
-			//			result.Success = false;
-			//		}
-			//		else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Bacs))
-			//		{
-			//			result.Success = false;
-			//		}
-			//		break;
-
-			//	case PaymentScheme.FasterPayments:
-			//		if (account == null)
-			//		{
-			//			result.Success = false;
-			//		}
-			//		else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.FasterPayments))
-			//		{
-			//			result.Success = false;
-			//		}
-			//		else if (account.Balance < request.Amount)
-			//		{
-			//			result.Success = false;
-			//		}
-			//		break;
-
-			//	case PaymentScheme.Chaps:
-			//		if (account == null)
-			//		{
-			//			result.Success = false;
-			//		}
-			//		else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Chaps))
-			//		{
-			//			result.Success = false;
-			//		}
-			//		else if (account.Status != AccountStatus.Live)
-			//		{
-			//			result.Success = false;
-			//		}
-			//		break;
-			//}
-
-			ValidateAccountService validateAccountService = new ValidateAccountService();
-			var result = validateAccountService.ValidatAccountWithRequest(account, request);
+			var validateAccountService = new ValidateAccountService();
+			MakePaymentResult result = validateAccountService.ValidatAccountWithRequest(account, request);
 
 			if (result.Success)
 			{
-				//account.Balance -= request.Amount;
+				Account modifiedAccount = accountService.DeductRequestFromAccount(request, account);
 
-				var modifiedAccount = DeductRequestFromAccount(request, account);
-
-				//if (dataStoreType == "Backup")
-				//{
-				//	var accountDataStore = new BackupAccountDataStore();
-				//	accountDataStore.UpdateAccount(modifiedAccount);
-				//}
-				//else
-				//{
-				//	var accountDataStore = new AccountDataStore();
-				//	accountDataStore.UpdateAccount(modifiedAccount);
-				//}
-
-				DatabaseService databaseService = new DatabaseService();
+				var databaseService = new DatabaseService();
 				databaseService.UpdateDatabase(modifiedAccount, dataStoreType);
 			}
 
 			return result;
-		}
-
-		public Account DeductRequestFromAccount(MakePaymentRequest request, Account account)
-		{
-			account.Balance -= request.Amount;
-			return account;
 		}
 	}
 }

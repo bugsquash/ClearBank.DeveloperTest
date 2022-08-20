@@ -22,5 +22,11 @@ namespace ClearBank.DeveloperTest.Services
 
 			return account;
 		}
+
+		public Account DeductRequestFromAccount(MakePaymentRequest request, Account account)
+		{
+			account.Balance -= request.Amount;
+			return account;
+		}
 	}
 }
