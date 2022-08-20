@@ -81,16 +81,19 @@ namespace ClearBank.DeveloperTest.Services
 
 				var modifiedAccount = DeductRequestFromAccount(request, account);
 
-				if (dataStoreType == "Backup")
-				{
-					var accountDataStore = new BackupAccountDataStore();
-					accountDataStore.UpdateAccount(modifiedAccount);
-				}
-				else
-				{
-					var accountDataStore = new AccountDataStore();
-					accountDataStore.UpdateAccount(modifiedAccount);
-				}
+				//if (dataStoreType == "Backup")
+				//{
+				//	var accountDataStore = new BackupAccountDataStore();
+				//	accountDataStore.UpdateAccount(modifiedAccount);
+				//}
+				//else
+				//{
+				//	var accountDataStore = new AccountDataStore();
+				//	accountDataStore.UpdateAccount(modifiedAccount);
+				//}
+
+				DatabaseService databaseService = new DatabaseService();
+				databaseService.UpdateDatabase(modifiedAccount);
 			}
 
 			return result;
