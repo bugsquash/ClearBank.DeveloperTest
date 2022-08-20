@@ -4,88 +4,95 @@ using System.Configuration;
 
 namespace ClearBank.DeveloperTest.Services
 {
-    public class PaymentService : IPaymentService
-    {
-        public MakePaymentResult MakePayment(MakePaymentRequest request)
-        {
-            var dataStoreType = ConfigurationManager.AppSettings["DataStoreType"];
+	public class PaymentService : IPaymentService
+	{
+		// Inject account dependency into new constructor for unit testing
+		private Account _testAccount;
+		public PaymentService(Account account)
+		{
+			_testAccount = account;
+		}
 
-            Account account = null;
+		public MakePaymentResult MakePayment(MakePaymentRequest request)
+		{
+			var dataStoreType = ConfigurationManager.AppSettings["DataStoreType"];
 
-            if (dataStoreType == "Backup")
-            {
-                var accountDataStore = new BackupAccountDataStore();
-                account = accountDataStore.GetAccount(request.DebtorAccountNumber);
-            }
-            else
-            {
-                var accountDataStore = new AccountDataStore();
-                account = accountDataStore.GetAccount(request.DebtorAccountNumber);
-            }
+			Account account = null;
 
-            var result = new MakePaymentResult();
+			if (dataStoreType == "Backup")
+			{
+				var accountDataStore = new BackupAccountDataStore();
+				account = accountDataStore.GetAccount(request.DebtorAccountNumber);
+			}
+			else
+			{
+				var accountDataStore = new AccountDataStore();
+				account = accountDataStore.GetAccount(request.DebtorAccountNumber);
+			}
 
-            switch (request.PaymentScheme)
-            {
-                case PaymentScheme.Bacs:
-                    if (account == null)
-                    {
-                        result.Success = false;
-                    }
-                    else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Bacs))
-                    {
-                        result.Success = false;
-                    }
-                    break;
+			var result = new MakePaymentResult();
 
-                case PaymentScheme.FasterPayments:
-                    if (account == null)
-                    {
-                        result.Success = false;
-                    }
-                    else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.FasterPayments))
-                    {
-                        result.Success = false;
-                    }
-                    else if (account.Balance < request.Amount)
-                    {
-                        result.Success = false;
-                    }
-                    break;
+			switch (request.PaymentScheme)
+			{
+				case PaymentScheme.Bacs:
+					if (account == null)
+					{
+						result.Success = false;
+					}
+					else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Bacs))
+					{
+						result.Success = false;
+					}
+					break;
 
-                case PaymentScheme.Chaps:
-                    if (account == null)
-                    {
-                        result.Success = false;
-                    }
-                    else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Chaps))
-                    {
-                        result.Success = false;
-                    }
-                    else if (account.Status != AccountStatus.Live)
-                    {
-                        result.Success = false;
-                    }
-                    break;
-            }
+				case PaymentScheme.FasterPayments:
+					if (account == null)
+					{
+						result.Success = false;
+					}
+					else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.FasterPayments))
+					{
+						result.Success = false;
+					}
+					else if (account.Balance < request.Amount)
+					{
+						result.Success = false;
+					}
+					break;
 
-            if (result.Success)
-            {
-                account.Balance -= request.Amount;
+				case PaymentScheme.Chaps:
+					if (account == null)
+					{
+						result.Success = false;
+					}
+					else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Chaps))
+					{
+						result.Success = false;
+					}
+					else if (account.Status != AccountStatus.Live)
+					{
+						result.Success = false;
+					}
+					break;
+			}
 
-                if (dataStoreType == "Backup")
-                {
-                    var accountDataStore = new BackupAccountDataStore();
-                    accountDataStore.UpdateAccount(account);
-                }
-                else
-                {
-                    var accountDataStore = new AccountDataStore();
-                    accountDataStore.UpdateAccount(account);
-                }
-            }
+			if (result.Success)
+			{
+				account.Balance -= request.Amount;
 
-            return result;
-        }
-    }
+				if (dataStoreType == "Backup")
+				{
+					var accountDataStore = new BackupAccountDataStore();
+					accountDataStore.UpdateAccount(account);
+				}
+				else
+				{
+					var accountDataStore = new AccountDataStore();
+					accountDataStore.UpdateAccount(account);
+				}
+			}
+
+			return result;
+		}
+	}
 }
