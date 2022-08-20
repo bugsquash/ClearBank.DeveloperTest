@@ -24,54 +24,56 @@ namespace ClearBank.DeveloperTest.Services
 			//}
 
 			AccountService accountService = new AccountService();
-
 			var account = accountService.GetAccount(request.DebtorAccountNumber);
 
-			var result = new MakePaymentResult();
+			//var result = new MakePaymentResult();
 
-			switch (request.PaymentScheme)
-			{
-				case PaymentScheme.Bacs:
-					if (account == null)
-					{
-						result.Success = false;
-					}
-					else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Bacs))
-					{
-						result.Success = false;
-					}
-					break;
+			//switch (request.PaymentScheme)
+			//{
+			//	case PaymentScheme.Bacs:
+			//		if (account == null)
+			//		{
+			//			result.Success = false;
+			//		}
+			//		else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Bacs))
+			//		{
+			//			result.Success = false;
+			//		}
+			//		break;
 
-				case PaymentScheme.FasterPayments:
-					if (account == null)
-					{
-						result.Success = false;
-					}
-					else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.FasterPayments))
-					{
-						result.Success = false;
-					}
-					else if (account.Balance < request.Amount)
-					{
-						result.Success = false;
-					}
-					break;
+			//	case PaymentScheme.FasterPayments:
+			//		if (account == null)
+			//		{
+			//			result.Success = false;
+			//		}
+			//		else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.FasterPayments))
+			//		{
+			//			result.Success = false;
+			//		}
+			//		else if (account.Balance < request.Amount)
+			//		{
+			//			result.Success = false;
+			//		}
+			//		break;
 
-				case PaymentScheme.Chaps:
-					if (account == null)
-					{
-						result.Success = false;
-					}
-					else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Chaps))
-					{
-						result.Success = false;
-					}
-					else if (account.Status != AccountStatus.Live)
-					{
-						result.Success = false;
-					}
-					break;
-			}
+			//	case PaymentScheme.Chaps:
+			//		if (account == null)
+			//		{
+			//			result.Success = false;
+			//		}
+			//		else if (!account.AllowedPaymentSchemes.HasFlag(AllowedPaymentSchemes.Chaps))
+			//		{
+			//			result.Success = false;
+			//		}
+			//		else if (account.Status != AccountStatus.Live)
+			//		{
+			//			result.Success = false;
+			//		}
+			//		break;
+			//}
+
+			ValidateAccountService validateAccountService = new ValidateAccountService();
+			var result = validateAccountService.ValidatAccountWithRequest(account, request);
 
 			if (result.Success)
 			{
