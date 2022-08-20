@@ -14,7 +14,7 @@ namespace ClearBank.DeveloperTest.Tests
 			var debtorAccount = new Account() { AccountNumber = "0123456789", AllowedPaymentSchemes = AllowedPaymentSchemes.FasterPayments, Balance = 100m, Status = AccountStatus.Live };
 			var paymentRequest = new MakePaymentRequest() { Amount = 10m, CreditorAccountNumber = "9876543210", DebtorAccountNumber = "0123456789", PaymentDate = DateTime.Now, PaymentScheme = PaymentScheme.FasterPayments };
 
-			var paymentService = new PaymentService(debtorAccount);
+			var paymentService = new PaymentService();
 
 			// Act
 			MakePaymentResult result = paymentService.MakePayment(paymentRequest);

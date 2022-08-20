@@ -6,13 +6,6 @@ namespace ClearBank.DeveloperTest.Services
 {
 	public class PaymentService : IPaymentService
 	{
-		// Inject account dependency into new constructor for unit testing
-		private Account _testAccount;
-		public PaymentService(Account account)
-		{
-			_testAccount = account;
-		}
-
 		public MakePaymentResult MakePayment(MakePaymentRequest request)
 		{
 			var dataStoreType = ConfigurationManager.AppSettings["DataStoreType"];
