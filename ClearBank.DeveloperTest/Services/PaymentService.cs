@@ -77,21 +77,29 @@ namespace ClearBank.DeveloperTest.Services
 
 			if (result.Success)
 			{
-				account.Balance -= request.Amount;
+				//account.Balance -= request.Amount;
+
+				var modifiedAccount = DeductRequestFromAccount(request, account);
 
 				if (dataStoreType == "Backup")
 				{
 					var accountDataStore = new BackupAccountDataStore();
-					accountDataStore.UpdateAccount(account);
+					accountDataStore.UpdateAccount(modifiedAccount);
 				}
 				else
 				{
 					var accountDataStore = new AccountDataStore();
-					accountDataStore.UpdateAccount(account);
+					accountDataStore.UpdateAccount(modifiedAccount);
 				}
 			}
 
 			return result;
+		}
+
+		public Account DeductRequestFromAccount(MakePaymentRequest request, Account account)
+		{
+			account.Balance -= request.Amount;
+			return account;
 		}
 	}
 }
