@@ -24,7 +24,7 @@ namespace ClearBank.DeveloperTest.Services
 			//}
 
 			AccountService accountService = new AccountService();
-			var account = accountService.GetAccount(request.DebtorAccountNumber);
+			var account = accountService.GetAccount(request.DebtorAccountNumber, dataStoreType);
 
 			//var result = new MakePaymentResult();
 
@@ -93,7 +93,7 @@ namespace ClearBank.DeveloperTest.Services
 				//}
 
 				DatabaseService databaseService = new DatabaseService();
-				databaseService.UpdateDatabase(modifiedAccount);
+				databaseService.UpdateDatabase(modifiedAccount, dataStoreType);
 			}
 
 			return result;

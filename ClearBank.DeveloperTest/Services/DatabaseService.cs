@@ -6,10 +6,8 @@ namespace ClearBank.DeveloperTest.Services
 {
 	public class DatabaseService
 	{
-		public void UpdateDatabase(Account account)
+		public void UpdateDatabase(Account account, string dataStoreType)
 		{
-			var dataStoreType = ConfigurationManager.AppSettings["DataStoreType"];
-
 			if (dataStoreType == "Backup")
 			{
 				var accountDataStore = new BackupAccountDataStore();

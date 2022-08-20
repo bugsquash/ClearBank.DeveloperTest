@@ -1,15 +1,12 @@
 ﻿using ClearBank.DeveloperTest.Data;
 using ClearBank.DeveloperTest.Types;
-using System.Configuration;
 
 namespace ClearBank.DeveloperTest.Services
 {
 	public class AccountService
 	{
-		public Account GetAccount(string accountNumber)
+		public Account GetAccount(string accountNumber, string dataStoreType)
 		{
-			var dataStoreType = ConfigurationManager.AppSettings["DataStoreType"];
-
 			Account account;
 
 			if (dataStoreType == "Backup")
