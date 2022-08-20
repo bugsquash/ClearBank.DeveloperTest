@@ -10,18 +10,22 @@ namespace ClearBank.DeveloperTest.Services
 		{
 			var dataStoreType = ConfigurationManager.AppSettings["DataStoreType"];
 
-			Account account = null;
+			//Account account = null;
 
-			if (dataStoreType == "Backup")
-			{
-				var accountDataStore = new BackupAccountDataStore();
-				account = accountDataStore.GetAccount(request.DebtorAccountNumber);
-			}
-			else
-			{
-				var accountDataStore = new AccountDataStore();
-				account = accountDataStore.GetAccount(request.DebtorAccountNumber);
-			}
+			//if (dataStoreType == "Backup")
+			//{
+			//	var accountDataStore = new BackupAccountDataStore();
+			//	account = accountDataStore.GetAccount(request.DebtorAccountNumber);
+			//}
+			//else
+			//{
+			//	var accountDataStore = new AccountDataStore();
+			//	account = accountDataStore.GetAccount(request.DebtorAccountNumber);
+			//}
+
+			AccountService accountService = new AccountService();
+
+			var account = accountService.GetAccount(request.DebtorAccountNumber);
 
 			var result = new MakePaymentResult();
 
