@@ -15,21 +15,24 @@ namespace ClearBank.DeveloperTest.Services.RequestServices
 			}
 			else
 			{
-				switch (request.PaymentScheme)
+				if (request.PaymentScheme != PaymentScheme.Bacs)
 				{
-					case PaymentScheme.FasterPayments:
-						if (account.Balance < request.Amount)
-						{
-							result.Success = false;
-						}
-						break;
+					switch (request.PaymentScheme)
+					{
+						case PaymentScheme.FasterPayments:
+							if (account.Balance < request.Amount)
+							{
+								result.Success = false;
+							}
+							break;
 
-					case PaymentScheme.Chaps:
-						if (account.Status != AccountStatus.Live)
-						{
-							result.Success = false;
-						}
-						break;
+						case PaymentScheme.Chaps:
+							if (account.Status != AccountStatus.Live)
+							{
+								result.Success = false;
+							}
+							break;
+					}
 				}
 			}
 
