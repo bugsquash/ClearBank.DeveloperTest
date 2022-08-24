@@ -1,4 +1,4 @@
-﻿using ClearBank.DeveloperTest.Services.RequestServices;
+﻿using ClearBank.DeveloperTest.Services;
 using ClearBank.DeveloperTest.Types;
 using System;
 using Xunit;
