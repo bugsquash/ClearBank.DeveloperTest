@@ -1,4 +1,5 @@
 using ClearBank.DeveloperTest.Services;
+using ClearBank.DeveloperTest.Services.Interfaces;
 using ClearBank.DeveloperTest.Types;
 using Moq;
 using System;

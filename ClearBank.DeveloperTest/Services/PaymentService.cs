@@ -1,4 +1,5 @@
-﻿using ClearBank.DeveloperTest.Types;
+﻿using ClearBank.DeveloperTest.Services.Interfaces;
+using ClearBank.DeveloperTest.Types;
 using System.Configuration;
 
 namespace ClearBank.DeveloperTest.Services
