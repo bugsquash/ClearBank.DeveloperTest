@@ -5,27 +5,33 @@ namespace ClearBank.DeveloperTest.Services
 {
 	public class PaymentService : IPaymentService
 	{
+		private readonly IAccountService _accountService;
+		private readonly IRequestService _requestService;
+		private readonly IDatabaseService _databaseService;
+
+		public PaymentService(IAccountService accountService, IRequestService requestService, IDatabaseService databaseService)
+		{
+			_accountService = accountService;
+			_requestService = requestService;
+			_databaseService = databaseService;
+		}
+
 		public MakePaymentResult MakePayment(MakePaymentRequest request)
 		{
 			var dataStoreType = ConfigurationManager.AppSettings["DataStoreType"];
+			var account = _accountService.GetAccount(request.DebtorAccountNumber, dataStoreType);
 
-			var accountService = new AccountService();
-			Account account = accountService.GetAccount(request.DebtorAccountNumber, dataStoreType);
-
-			MakePaymentResult result = new MakePaymentResult();
+			var result = new MakePaymentResult();
 
 			if (account != null)
 			{
-				var requestService = new RequestService();
-				result = requestService.ValidatRequestWithAccount(request, account);
+				result = _requestService.ValidatRequestWithAccount(request, account);
 			}
 
 			if (result.Success)
 			{
-				Account modifiedAccount = accountService.DeductRequestFromAccount(request, account);
-
-				var databaseService = new DatabaseService();
-				databaseService.UpdateDatabase(modifiedAccount, dataStoreType);
+				account.Balance -= request.Amount;
+				_databaseService.UpdateDatabase(account, dataStoreType);
 			}
 
 			return result;
